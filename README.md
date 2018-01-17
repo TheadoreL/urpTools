@@ -18,3 +18,9 @@
 每个模块使用前需以数组传入用户学号及密码
 
 ```[num, pwd]```
+
+## web服务器
+
+web服务器使用 **uWsgi** 部署，使用前请复制 **uwsgi.ini.example** 到 **uwsgi.ini**
+
+nginx 的配置文件示例详见 **nginx.conf.example**
