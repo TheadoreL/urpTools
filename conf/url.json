@@ -1,0 +1,6 @@
+{
+  "main": "http://newjw.cduestc.cn",
+  "login": "/loginAction.do",
+  "thisTremScore": "/bxqcjcxAction.do?pageSize=300",
+  "allScore": "/gradeLnAllAction.do?type=ln&oper=qbinfo&lnxndm"
+}

@@ -1,0 +1,5 @@
+requests
+Flask
+beautifulsoup4
+lxml
+pytest
