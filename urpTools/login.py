@@ -42,9 +42,9 @@ class urpLogin(object):
 
     def isLogin(self):
         # 打开主页，根据title判断登陆状态
-        page = self.open(self.urls['self'])
+        page = self.open(self.urls['user'])
         soup = BeautifulSoup(page.text, 'lxml')
-        if soup.title.string == '学籍查询':
+        if soup.title.string == '修改密码':
             return True
         return False
 
@@ -59,7 +59,12 @@ class urpLogin(object):
     def open(self, url, delay=0, timeout=100):
         if delay:
             time.sleep(delay)
-        return self.__session.get(self.urls['main']+url, cookies=self.__cookie, timeout=timeout)
+        return self.__session.get(self.urls['main']+url, timeout=timeout)
+
+    def post(self, url, data, delay=0, timeout=100):
+        if delay:
+            time.sleep(delay)
+        return self.__session.post(self.urls['main']+url, data=data, timeout=timeout)
 
     def __saveCookie(self):
         with open(self.cookieFile, "w") as output:

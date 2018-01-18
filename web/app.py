@@ -4,11 +4,13 @@
 from flask import Flask
 from flask import render_template
 from flask import jsonify
+from flask import request
 
 # urpTools
 from urpTools.login import urpLogin
 from urpTools.getInfo import getInfo
 from urpTools.getScore import getScore
+from urpTools.putScore import putScore
 
 app = Flask(__name__)
 
@@ -38,6 +40,54 @@ def scores(attr, num, pwd):
         return jsonify({'data': score.getThisTerm()})
     else:
         return jsonify({'data': 'errAttr'})
+
+# 教师获取学期接口
+@app.route('/teacher/terms/<num>/<pwd>')
+def getTerms(num, pwd):
+    scores = putScore([num, pwd])
+    return jsonify({'data': scores.getTerms()})
+
+# 教师获取成绩系数列表接口
+@app.route('/teacher/coef/list/<num>/<pwd>/<term>')
+def getCoefList(num, pwd, term):
+    scores = putScore([num, pwd])
+    return jsonify({'data': scores.getCoefList(term)})
+
+# 教师保存成绩系数接口
+@app.route('/teacher/coef/save/<num>/<pwd>/<term>/<classNum>/<classSeq>/<dailyScore>/<examScore>')
+def saveScoreCoef(num, pwd, term, classNum, classSeq, dailyScore, examScore):
+    scores = putScore([num, pwd])
+    return jsonify({'data': scores.saveCoef(term, classNum, classSeq, dailyScore, examScore)})
+
+# 教师获取成绩系数接口
+@app.route('/teacher/coef/get/<num>/<pwd>/<term>/<classNum>/<classSeq>')
+def getScoreCoef(num, pwd, term, classNum, classSeq):
+    scores = putScore([num, pwd])
+    return jsonify({'data': scores.getCoef(term, classNum, classSeq)})
+
+# 教师获取课程列表接口
+@app.route('/teacher/class/list/<num>/<pwd>/<term>')
+def getClassList(num, pwd, term):
+    scores = putScore([num, pwd])
+    return jsonify({'data': scores.getClassList(term)})
+
+# 教师判断成绩系数是否录入接口
+@app.route('/teacher/coef/verify/<num>/<pwd>/<term>/<classNum>/<classSeq>/<classType>')
+def verifyCoef(num, pwd, term, classNum, classSeq, classType):
+    scores = putScore([num, pwd])
+    return jsonify({'data': scores.hasCoef(term, classNum, classSeq, classType)})
+
+# 教师保存成绩接口
+@app.route('/teacher/score/save/<num>/<pwd>/<term>/<classNum>/<classSeq>/<classType>', methods=['POST'])
+def saveScore(num, pwd, term, classNum, classSeq, classType):
+    scores = putScore([num, pwd])
+    return jsonify({'data': scores.saveScore(term, classNum, classSeq, classType, request.form)})
+
+# 教师获取学生列表接口
+@app.route('/teacher/students/list/<num>/<pwd>/<term>/<classNum>/<classSeq>/<classType>')
+def getStudentsList(num, pwd, term, classNum, classSeq, classType):
+    scores = putScore([num, pwd])
+    return jsonify({'data': scores.getStudents(term, classNum, classSeq, classType)})
 
 if __name__ == '__main__':
     app.run()

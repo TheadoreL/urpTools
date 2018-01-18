@@ -9,7 +9,6 @@ class getScore(object):
 
     def __init__(self, user):
         self.__num = user[0]
-        self.__photoPath = '../storage/photos/'
         self.urp = urpLogin(user)
         # 读取url配置文件
         with open('../conf/url.json', 'r') as f:
