@@ -81,7 +81,29 @@ def verifyCoef(num, pwd, term, classNum, classSeq, classType):
 @app.route('/teacher/score/save/<num>/<pwd>/<term>/<classNum>/<classSeq>/<classType>', methods=['POST'])
 def saveScore(num, pwd, term, classNum, classSeq, classType):
     scores = putScore([num, pwd])
-    return jsonify({'data': scores.saveScore(term, classNum, classSeq, classType, request.form)})
+    score = []
+    for x in request.get_json():
+        tmp = []
+        if x['num']:
+            tmp.append(x['num'])
+            if x['daily']:
+                tmp.append(x['daily'])
+            else:
+                tmp.append('')
+            if x['exam']:
+                tmp.append(x['exam'])
+            else:
+                tmp.append('')
+            if x['total']:
+                tmp.append(x['total'])
+            else:
+                tmp.append('')
+            if x['failRes']:
+                tmp.append(x['failRes'])
+            else:
+                tmp.append('')
+        score.append(tmp)
+    return jsonify({'data': scores.saveScore(term, classNum, classSeq, classType, score)})
 
 # 教师获取学生列表接口
 @app.route('/teacher/students/list/<num>/<pwd>/<term>/<classNum>/<classSeq>/<classType>')

@@ -196,6 +196,7 @@ class putScore(object):
             data[x[0] + '_kt_qm'] = x[2]
             data[x[0] + '_zcj'] = x[3]
             data[x[0] + '_wtgyydm'] = x[4]
+        self.urp.open(self.urls['getStudents'])
         page = self.urp.post(self.urls['scoreSave'], data)
         pattern = re.compile(u"\<script language\=\"javascript\"\>alert\(\"(.*?)\"\)\;\<\/script\>", re.S)
         try:
