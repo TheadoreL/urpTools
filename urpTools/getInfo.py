@@ -4,15 +4,19 @@
 from urpTools.login import urpLogin
 import re
 import json
+import os
+import sys
 
 class getInfo(object):
 
     def __init__(self, user):
+        os.chdir(sys.path[0])
         self.__num = user[0]
         self.__photoPath = '../storage/photos/'
         self.urp = urpLogin(user)
         # 读取url配置文件
-        with open('../conf/url.json', 'r') as f:
+        path = os.path.abspath('..')
+        with open(path + '/conf/url.json', 'r') as f:
             self.urls = json.load(f)
 
     def info(self):

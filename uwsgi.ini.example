@@ -2,15 +2,16 @@
 #application's base folder
 base = /path/to/app
 
+chdir = /path/to/app
+
 #python module to import
-app = app
-module = %(app)
+wsgi-file = web/app.py
 
 home = %(base)/venv
 pythonpath = %(base)
 
 #socket file's location
-socket = /path/to/app/%n.sock
+socket = /path/to/app/app.sock
 
 #permissions for the socket file
 chmod-socket = 666
@@ -19,4 +20,4 @@ chmod-socket = 666
 callable = app
 
 #location of log files
-logto = /path/to/app/storage/logs/%n.log
+logto = /path/to/app/storage/logs/app.log
