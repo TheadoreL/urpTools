@@ -45,7 +45,9 @@ class urpLogin(object):
         page = self.open(self.urls['user'])
         soup = BeautifulSoup(page.text, 'lxml')
         if soup.title.string == '修改密码':
-            return True
+            if soup.find('td', attrs={'valign': 'middle'}).b.text:
+                return soup.find('td', attrs={'valign': 'middle'}).b.text
+            return False
         return False
 
     def login(self):

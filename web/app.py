@@ -22,7 +22,10 @@ def index():
 @app.route('/user/verify/<num>/<pwd>')
 def userVerify(num, pwd):
     urp = urpLogin([num, pwd])
-    return jsonify({'status': urp.isLogin()})
+    res = urp.isLogin()
+    if res:
+        return jsonify({'status': True, 'name': res})
+    return jsonify({'status': False})
 
 # 获取用户信息接口
 @app.route('/user/info/<num>/<pwd>')
