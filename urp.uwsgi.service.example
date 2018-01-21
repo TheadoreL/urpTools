@@ -1,0 +1,15 @@
+[Unit]
+Description=uWSGI URP Tool Server
+After=syslog.target
+
+[Service]
+ExecStart=/path/to/app/venv/bin/uwsgi --ini /path/to/app/urpTools/uwsgi.ini
+RuntimeDirectory=uwsgi-urpTool
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
