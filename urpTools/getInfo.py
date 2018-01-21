@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from urpTools.login import urpLogin
+import conf.conf as conf
 import re
-import json
 import os
 import sys
 
@@ -15,9 +15,7 @@ class getInfo(object):
         self.__photoPath = '../storage/photos/'
         self.urp = urpLogin(user)
         # 读取url配置文件
-        path = os.path.abspath('..')
-        with open(path + '/conf/url.json', 'r') as f:
-            self.urls = json.load(f)
+        self.urls = conf.urls()
 
     def info(self):
         page = self.urp.open(self.urls['self'])

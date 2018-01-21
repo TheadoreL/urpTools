@@ -4,7 +4,7 @@
 from urpTools.login import urpLogin
 from bs4 import BeautifulSoup
 import re
-import json
+import conf.conf as conf
 import os
 import sys
 
@@ -16,8 +16,7 @@ class putScore(object):
         self.urp = urpLogin(user)
         # 读取url配置文件
         path = os.path.abspath('..')
-        with open(path+'/conf/url.json', 'r') as f:
-            self.urls = json.load(f)
+        self.urls = conf.urls()
 
     # 获取学期数据
     def getTerms(self):

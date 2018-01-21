@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import requests
+import conf.conf as conf
 import json
 import os
 import sys
@@ -20,9 +21,7 @@ class urpLogin(object):
         }
         self.cookieFile = '../storage/cookies/'+user[0]+'.json'
         # 读取url配置文件
-        path = os.path.abspath('..')
-        with open(path + '/conf/url.json', 'r') as f:
-            self.urls = json.load(f)
+        self.urls = conf.urls()
         self.__session = requests.session()
         self.__cookie = self.__loadCookie()
         if self.__cookie:
