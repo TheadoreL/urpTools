@@ -19,7 +19,7 @@ class urpLogin(object):
             'zjh': user[0],
             'mm': user[1]
         }
-        self.cookieFile = '../storage/cookies/'+user[0]+'.json'
+        self.cookieFile = os.path.dirname(os.path.realpath(__file__)) + '/storage/cookies/'+user[0]+'.json'
         # 读取url配置文件
         self.urls = conf.urls()
         self.__session = requests.session()

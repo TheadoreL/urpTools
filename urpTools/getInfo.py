@@ -12,7 +12,7 @@ class getInfo(object):
     def __init__(self, user):
         os.chdir(sys.path[0])
         self.__num = user[0]
-        self.__photoPath = '../storage/photos/'
+        self.__photoPath = os.path.dirname(os.path.realpath(__file__)) + '/storage/photos/'
         self.urp = urpLogin(user)
         # 读取url配置文件
         self.urls = conf.urls()
