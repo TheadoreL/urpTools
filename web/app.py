@@ -57,10 +57,10 @@ def getCoefList(num, pwd, term):
     return jsonify({'data': scores.getCoefList(term)})
 
 # 教师保存成绩系数接口
-@app.route('/teacher/coef/save/<num>/<pwd>/<term>/<classNum>/<classSeq>/<dailyScore>/<examScore>')
-def saveScoreCoef(num, pwd, term, classNum, classSeq, dailyScore, examScore):
+@app.route('/teacher/coef/save/<num>/<pwd>/<term>/<classNum>/<classSeq>/<dailyScore>/<examScore>/<examMid>')
+def saveScoreCoef(num, pwd, term, classNum, classSeq, dailyScore, examScore, examMid):
     scores = putScore([num, pwd])
-    return jsonify({'data': scores.saveCoef(term, classNum, classSeq, dailyScore, examScore)})
+    return jsonify({'data': scores.saveCoef(term, classNum, classSeq, dailyScore, examScore, examMid)})
 
 # 教师获取成绩系数接口
 @app.route('/teacher/coef/get/<num>/<pwd>/<term>/<classNum>/<classSeq>')
@@ -86,25 +86,29 @@ def saveScore(num, pwd, term, classNum, classSeq, classType):
     scores = putScore([num, pwd])
     score = []
     for x in request.get_json():
-        tmp = []
+        tmp = {}
         if x['num']:
-            tmp.append(x['num'])
+            tmp['number'] = x['num']
             if x['daily']:
-                tmp.append(x['daily'])
+                tmp['daily'] = x['daily']
             else:
-                tmp.append('')
+                tmp['daily'] = ''
             if x['exam']:
-                tmp.append(x['exam'])
+                tmp['exam'] = x['exam']
             else:
-                tmp.append('')
+                tmp['exam'] = ''
+            if x['examMid']:
+                tmp['examMid'] = x['examMid']
+            else:
+                tmp['examMid'] = ''
             if x['total']:
-                tmp.append(x['total'])
+                tmp['total'] = x['total']
             else:
-                tmp.append('')
+                tmp['total'] = ''
             if x['failRes']:
-                tmp.append(x['failRes'])
+                tmp['failRes'] = x['failRes']
             else:
-                tmp.append('')
+                tmp['failRes'] = ''
         score.append(tmp)
     return jsonify({'data': scores.saveScore(term, classNum, classSeq, classType, score)})
 
