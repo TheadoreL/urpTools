@@ -87,28 +87,30 @@ def saveScore(num, pwd, term, classNum, classSeq, classType):
     score = []
     for x in request.get_json():
         tmp = {}
-        if x['num']:
+        try:
             tmp['number'] = x['num']
-            if x['daily']:
+            try:
                 tmp['daily'] = x['daily']
-            else:
+            except:
                 tmp['daily'] = ''
-            if x['exam']:
+            try:
                 tmp['exam'] = x['exam']
-            else:
+            except:
                 tmp['exam'] = ''
-            if x['examMid']:
+            try:
                 tmp['examMid'] = x['examMid']
-            else:
+            except:
                 tmp['examMid'] = ''
-            if x['total']:
+            try:
                 tmp['total'] = x['total']
-            else:
+            except:
                 tmp['total'] = ''
-            if x['failRes']:
+            try:
                 tmp['failRes'] = x['failRes']
-            else:
+            except:
                 tmp['failRes'] = ''
+        except:
+            pass
         score.append(tmp)
     return jsonify({'data': scores.saveScore(term, classNum, classSeq, classType, score)})
 
