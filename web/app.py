@@ -22,7 +22,10 @@ def index():
 @app.route('/user/verify/<num>/<pwd>')
 def userVerify(num, pwd):
     urp = urpLogin([num, pwd])
-    return jsonify({'status': urp.isLogin()})
+    res = urp.isLogin()
+    if res:
+        return jsonify({'status': True, 'name': res})
+    return jsonify({'status': False})
 
 # 获取用户信息接口
 @app.route('/user/info/<num>/<pwd>')
@@ -54,10 +57,10 @@ def getCoefList(num, pwd, term):
     return jsonify({'data': scores.getCoefList(term)})
 
 # 教师保存成绩系数接口
-@app.route('/teacher/coef/save/<num>/<pwd>/<term>/<classNum>/<classSeq>/<dailyScore>/<examScore>')
-def saveScoreCoef(num, pwd, term, classNum, classSeq, dailyScore, examScore):
+@app.route('/teacher/coef/save/<num>/<pwd>/<term>/<classNum>/<classSeq>/<dailyScore>/<examScore>/<examMid>')
+def saveScoreCoef(num, pwd, term, classNum, classSeq, dailyScore, examScore, examMid):
     scores = putScore([num, pwd])
-    return jsonify({'data': scores.saveCoef(term, classNum, classSeq, dailyScore, examScore)})
+    return jsonify({'data': scores.saveCoef(term, classNum, classSeq, dailyScore, examScore, examMid)})
 
 # 教师获取成绩系数接口
 @app.route('/teacher/coef/get/<num>/<pwd>/<term>/<classNum>/<classSeq>')
@@ -83,25 +86,31 @@ def saveScore(num, pwd, term, classNum, classSeq, classType):
     scores = putScore([num, pwd])
     score = []
     for x in request.get_json():
-        tmp = []
-        if x['num']:
-            tmp.append(x['num'])
-            if x['daily']:
-                tmp.append(x['daily'])
-            else:
-                tmp.append('')
-            if x['exam']:
-                tmp.append(x['exam'])
-            else:
-                tmp.append('')
-            if x['total']:
-                tmp.append(x['total'])
-            else:
-                tmp.append('')
-            if x['failRes']:
-                tmp.append(x['failRes'])
-            else:
-                tmp.append('')
+        tmp = {}
+        try:
+            tmp['number'] = x['num']
+            try:
+                tmp['daily'] = x['daily']
+            except:
+                tmp['daily'] = ''
+            try:
+                tmp['exam'] = x['exam']
+            except:
+                tmp['exam'] = ''
+            try:
+                tmp['examMid'] = x['examMid']
+            except:
+                tmp['examMid'] = ''
+            try:
+                tmp['total'] = x['total']
+            except:
+                tmp['total'] = ''
+            try:
+                tmp['failRes'] = x['failRes']
+            except:
+                tmp['failRes'] = ''
+        except:
+            pass
         score.append(tmp)
     return jsonify({'data': scores.saveScore(term, classNum, classSeq, classType, score)})
 

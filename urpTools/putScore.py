@@ -67,7 +67,7 @@ class putScore(object):
         return data
 
     # 保存成绩系数
-    def saveCoef(self, term, classNum, classSeq, dailyScore, examScore):
+    def saveCoef(self, term, classNum, classSeq, dailyScore, examScore, examMid=0.0):
         data = {
             'zxjxjhh': term,
             'kch': classNum,
@@ -77,7 +77,7 @@ class putScore(object):
             'sjcj': 0.0,
             'sycj': 0.0,
             'ktcjps': dailyScore,
-            'ktcjqz': 0.0,
+            'ktcjqz': examMid,
             'ktcjqm': examScore,
             'sjcjps': 0.0,
             'sjcjqz': 0.0,
@@ -104,7 +104,8 @@ class putScore(object):
         try:
             return {
                 'daily': soup.find('input', attrs= {'name': 'ktcjps'})['value'],
-                'exam': soup.find('input', attrs= {'name': 'ktcjqm'})['value']
+                'exam': soup.find('input', attrs= {'name': 'ktcjqm'})['value'],
+                'examMid': soup.find('input', attrs={'name': 'ktcjqz'})['value']
             }
         except:
             return {}
@@ -159,6 +160,7 @@ class putScore(object):
 
     # 获取学生数据
     def getStudents(self, term, classNum, classSeq, classType):
+        coef = self.getCoef(term, classNum, classSeq)
         openData = {
             'zxjxjhh': term,
             'kch': classNum,
@@ -176,6 +178,20 @@ class putScore(object):
                 tmp['number'] = tds[1].string.replace(" ", "").replace("\t", "").strip()
                 tmp['name'] = tds[2].string.replace(" ", "").replace("\t", "").strip()
                 tmp['class'] = tds[3].string.replace(" ", "").replace("\t", "").strip()
+                tmp['daily'] = tds[4].find('input')['value']
+                if float(coef['examMid']) > 0:
+                    tmp['examMid'] = tds[5].find('input')['value']
+                    tmp['exam'] = tds[6].find('input')['value']
+                    tmp['total'] = tds[8].find('input')['value']
+                    option = tds[10].find('option', attrs={'selected': 'selected'})
+                else:
+                    tmp['exam'] = tds[5].find('input')['value']
+                    tmp['total'] = tds[7].find('input')['value']
+                    option = tds[9].find('option', attrs={'selected': 'selected'})
+                if option:
+                    tmp['failRes'] = option['value']
+                else:
+                    tmp['failRes'] = ''
                 data.append(tmp)
         except:
             pass
@@ -183,6 +199,7 @@ class putScore(object):
 
     # 保存成绩
     def saveScore(self, term, classNum, classSeq, classType, score):
+        coef = self.getCoef(term, classNum, classSeq)
         openData = {
             'zxjxjhh': term,
             'kch': classNum,
@@ -195,10 +212,12 @@ class putScore(object):
             'cjlrfs': 'null'
         }
         for x in score:
-            data[x[0] + '_kt_ps'] = x[1]
-            data[x[0] + '_kt_qm'] = x[2]
-            data[x[0] + '_zcj'] = x[3]
-            data[x[0] + '_wtgyydm'] = x[4]
+            data[x['number'] + '_kt_ps'] = x['daily']
+            if float(coef['examMid']) > 0:
+                data[x['number'] + '_kt_qz'] = x['examMid']
+            data[x['number'] + '_kt_qm'] = x['exam']
+            data[x['number'] + '_zcj'] = x['total']
+            data[x['number'] + '_wtgyydm'] = x['failRes']
         self.urp.open(self.urls['getStudents'])
         page = self.urp.post(self.urls['scoreSave'], data)
         pattern = re.compile(u"\<script language\=\"javascript\"\>alert\(\"(.*?)\"\)\;\<\/script\>", re.S)
