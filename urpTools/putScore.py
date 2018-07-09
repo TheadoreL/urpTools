@@ -179,19 +179,19 @@ class putScore(object):
                 tmp['name'] = tds[2].string.replace(" ", "").replace("\t", "").strip()
                 tmp['class'] = tds[3].string.replace(" ", "").replace("\t", "").strip()
                 tmp['daily'] = tds[4].find('input')['value']
-                # if float(coef['examMid']) > 0:
-                #     tmp['examMid'] = tds[5].find('input')['value']
-                #     tmp['exam'] = tds[6].find('input')['value']
-                #     tmp['total'] = tds[8].find('input')['value']
-                #     option = tds[10].find('option', attrs={'selected': 'selected'})
-                # else:
-                #     tmp['exam'] = tds[5].find('input')['value']
-                #     tmp['total'] = tds[7].find('input')['value']
-                #     option = tds[9].find('option', attrs={'selected': 'selected'})
-                # if option:
-                #     tmp['failRes'] = option['value']
-                # else:
-                #     tmp['failRes'] = ''
+                if float(coef['examMid']) > 0:
+                    tmp['examMid'] = tds[5].find('input')['value']
+                    tmp['exam'] = tds[6].find('input')['value']
+                    tmp['total'] = tds[8].find('input')['value']
+                    option = tds[10].find('option', attrs={'selected': 'selected'})
+                else:
+                    tmp['exam'] = tds[5].find('input')['value']
+                    tmp['total'] = tds[7].find('input')['value']
+                    option = tds[9].find('option', attrs={'selected': 'selected'})
+                if option:
+                    tmp['failRes'] = option['value']
+                else:
+                    tmp['failRes'] = ''
                 data.append(tmp)
         except:
             pass
