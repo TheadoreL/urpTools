@@ -80,17 +80,17 @@ class putScore(object):
             'kxh': classSeq,
             'isCheckControlValue': 1,
             'ktcj': classScore,
-            'sjcj': 0.0,
-            'sycj': expScore,
+            'sjcj': expScore,
+            'sycj': 0.0,
             'ktcjps': dailyScore,
             'ktcjqz': examMid,
             'ktcjqm': examScore,
             'sjcjps': 0.0,
             'sjcjqz': 0.0,
-            'sjcjqm': 0.0,
+            'sjcjqm': expScoreCoef,
             'sycjps': 0.0,
             'sycjqz': 0.0,
-            'sycjqm': expScoreCoef,
+            'sycjqm': 0.0,
         }
         page = self.urp.post(self.urls['scoreCoefSave'], data)
         pattern = re.compile(u"xx \= \"(.*?)\"", re.S)
@@ -112,7 +112,7 @@ class putScore(object):
                 'daily': soup.find('input', attrs= {'name': 'ktcjps'})['value'],
                 'exam': soup.find('input', attrs= {'name': 'ktcjqm'})['value'],
                 'examMid': soup.find('input', attrs={'name': 'ktcjqz'})['value'],
-                'examExp': soup.find('input', attrs={'name': 'sycj'})['value']
+                'examExp': soup.find('input', attrs={'name': 'sjcj'})['value']
             }
         except:
             return {}
@@ -186,7 +186,7 @@ class putScore(object):
                 tmp['name'] = tds[2].string.replace(" ", "").replace("\t", "").strip()
                 tmp['class'] = tds[3].string.replace(" ", "").replace("\t", "").strip()
                 if float(coef['examExp']) > 0:
-                    tmp['examExp'] = x.find('input', attrs={'name': re.compile('\d_sy_qm')})['value']
+                    tmp['examExp'] = x.find('input', attrs={'name': re.compile('\d_sj_qm')})['value']
                 tmp['daily'] = x.find('input', attrs = {'name': re.compile('\d_kt_ps')})['value']
                 if float(coef['examMid']) > 0:
                     tmp['examMid'] = x.find('input', attrs = {'name': re.compile('\d_kt_qz')})['value']
@@ -221,8 +221,8 @@ class putScore(object):
             data[x['number'] + '_kt_ps'] = x['daily']
             if float(coef['examMid']) > 0:
                 data[x['number'] + '_kt_qz'] = x['examMid']
-            if float(coef['examMid']) > 0:
-                data[x['number'] + '_sy_qm'] = x['examExp']
+            if float(coef['examExp']) > 0:
+                data[x['number'] + '_sj_qm'] = x['examExp']
             data[x['number'] + '_kt_qm'] = x['exam']
             data[x['number'] + '_zcj'] = x['total']
             data[x['number'] + '_wtgyydm'] = x['failRes']
