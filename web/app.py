@@ -57,10 +57,10 @@ def getCoefList(num, pwd, term):
     return jsonify({'data': scores.getCoefList(term)})
 
 # 教师保存成绩系数接口
-@app.route('/teacher/coef/save/<num>/<pwd>/<term>/<classNum>/<classSeq>/<dailyScore>/<examScore>/<examMid>')
-def saveScoreCoef(num, pwd, term, classNum, classSeq, dailyScore, examScore, examMid):
+@app.route('/teacher/coef/save/<num>/<pwd>/<term>/<classNum>/<classSeq>/<dailyScore>/<examScore>/<examExp>/<examMid>')
+def saveScoreCoef(num, pwd, term, classNum, classSeq, dailyScore, examScore, examExp, examMid):
     scores = putScore([num, pwd])
-    return jsonify({'data': scores.saveCoef(term, classNum, classSeq, dailyScore, examScore, examMid)})
+    return jsonify({'data': scores.saveCoef(term, classNum, classSeq, dailyScore, examScore, examExp, examMid)})
 
 # 教师获取成绩系数接口
 @app.route('/teacher/coef/get/<num>/<pwd>/<term>/<classNum>/<classSeq>')

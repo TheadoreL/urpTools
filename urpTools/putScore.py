@@ -67,15 +67,21 @@ class putScore(object):
         return data
 
     # 保存成绩系数
-    def saveCoef(self, term, classNum, classSeq, dailyScore, examScore, examMid=0.0):
+    def saveCoef(self, term, classNum, classSeq, dailyScore, examScore, expScore=0.0, examMid=0.0):
+        if float(expScore) > 0:
+            classScore = 1.0 - float(expScore)
+            expScoreCoef = 1.0
+        else:
+            classScore = 1.0
+            expScoreCoef = 0.0
         data = {
             'zxjxjhh': term,
             'kch': classNum,
             'kxh': classSeq,
             'isCheckControlValue': 1,
-            'ktcj': 1.0,
+            'ktcj': classScore,
             'sjcj': 0.0,
-            'sycj': 0.0,
+            'sycj': expScore,
             'ktcjps': dailyScore,
             'ktcjqz': examMid,
             'ktcjqm': examScore,
@@ -84,7 +90,7 @@ class putScore(object):
             'sjcjqm': 0.0,
             'sycjps': 0.0,
             'sycjqz': 0.0,
-            'sycjqm': 0.0,
+            'sycjqm': expScoreCoef,
         }
         page = self.urp.post(self.urls['scoreCoefSave'], data)
         pattern = re.compile(u"xx \= \"(.*?)\"", re.S)
@@ -105,7 +111,8 @@ class putScore(object):
             return {
                 'daily': soup.find('input', attrs= {'name': 'ktcjps'})['value'],
                 'exam': soup.find('input', attrs= {'name': 'ktcjqm'})['value'],
-                'examMid': soup.find('input', attrs={'name': 'ktcjqz'})['value']
+                'examMid': soup.find('input', attrs={'name': 'ktcjqz'})['value'],
+                'examExp': soup.find('input', attrs={'name': 'sycj'})['value']
             }
         except:
             return {}
@@ -178,19 +185,18 @@ class putScore(object):
                 tmp['number'] = tds[1].string.replace(" ", "").replace("\t", "").strip()
                 tmp['name'] = tds[2].string.replace(" ", "").replace("\t", "").strip()
                 tmp['class'] = tds[3].string.replace(" ", "").replace("\t", "").strip()
-                tmp['daily'] = tds[4].find('input')['value']
+                if float(coef['examExp']) > 0:
+                    tmp['examExp'] = x.find('input', attrs={'name': re.compile('\d_sy_qm')})['value']
+                tmp['daily'] = x.find('input', attrs = {'name': re.compile('\d_kt_ps')})['value']
                 if float(coef['examMid']) > 0:
-                    tmp['examMid'] = tds[5].find('input')['value']
-                    tmp['exam'] = tds[6].find('input')['value']
-                    tmp['total'] = tds[8].find('input')['value']
-                    option = tds[10].find('option', attrs={'selected': 'selected'})
-                else:
-                    tmp['exam'] = tds[5].find('input')['value']
-                    tmp['total'] = tds[7].find('input')['value']
-                    option = tds[9].find('option', attrs={'selected': 'selected'})
-                if option:
+                    tmp['examMid'] = x.find('input', attrs = {'name': re.compile('\d_kt_qz')})['value']
+                tmp['exam'] = x.find('input', attrs = {'name': re.compile('\d_kt_qm')})['value']
+                tmp['total'] = x.find('input', attrs = {'name': re.compile('\d_zcj')})['value']
+                selectDom = x.find('select', attrs = {'name': re.compile('\d_wtgyydm')})
+                try:
+                    option = selectDom.find('option', attrs={'selected': 'selected'})
                     tmp['failRes'] = option['value']
-                else:
+                except:
                     tmp['failRes'] = ''
                 data.append(tmp)
         except:
@@ -215,6 +221,8 @@ class putScore(object):
             data[x['number'] + '_kt_ps'] = x['daily']
             if float(coef['examMid']) > 0:
                 data[x['number'] + '_kt_qz'] = x['examMid']
+            if float(coef['examMid']) > 0:
+                data[x['number'] + '_sy_qm'] = x['examExp']
             data[x['number'] + '_kt_qm'] = x['exam']
             data[x['number'] + '_zcj'] = x['total']
             data[x['number'] + '_wtgyydm'] = x['failRes']
