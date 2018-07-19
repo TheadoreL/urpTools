@@ -102,6 +102,10 @@ def saveScore(num, pwd, term, classNum, classSeq, classType):
             except:
                 tmp['examMid'] = ''
             try:
+                tmp['examExp'] = x['examExp']
+            except:
+                tmp['examExp'] = ''
+            try:
                 tmp['total'] = x['total']
             except:
                 tmp['total'] = ''
