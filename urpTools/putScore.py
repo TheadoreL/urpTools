@@ -187,10 +187,12 @@ class putScore(object):
                 tmp['class'] = tds[3].string.replace(" ", "").replace("\t", "").strip()
                 if float(coef['examExp']) > 0:
                     tmp['examExp'] = x.find('input', attrs={'name': re.compile('\d_sj_qm')})['value']
-                tmp['daily'] = x.find('input', attrs = {'name': re.compile('\d_kt_ps')})['value']
+                if float(coef['daily']) > 0:
+                    tmp['daily'] = x.find('input', attrs = {'name': re.compile('\d_kt_ps')})['value']
                 if float(coef['examMid']) > 0:
                     tmp['examMid'] = x.find('input', attrs = {'name': re.compile('\d_kt_qz')})['value']
-                tmp['exam'] = x.find('input', attrs = {'name': re.compile('\d_kt_qm')})['value']
+                if float(coef['exam']) > 0:
+                    tmp['exam'] = x.find('input', attrs = {'name': re.compile('\d_kt_qm')})['value']
                 tmp['total'] = x.find('input', attrs = {'name': re.compile('\d_zcj')})['value']
                 selectDom = x.find('select', attrs = {'name': re.compile('\d_wtgyydm')})
                 try:
@@ -218,12 +220,14 @@ class putScore(object):
             'cjlrfs': 'null'
         }
         for x in score:
-            data[x['number'] + '_kt_ps'] = x['daily']
+            if float(coef['daily']) > 0:
+                data[x['number'] + '_kt_ps'] = x['daily']
             if float(coef['examMid']) > 0:
                 data[x['number'] + '_kt_qz'] = x['examMid']
             if float(coef['examExp']) > 0:
                 data[x['number'] + '_sj_qm'] = x['examExp']
-            data[x['number'] + '_kt_qm'] = x['exam']
+            if float(coef['exam']) > 0:
+                data[x['number'] + '_kt_qm'] = x['exam']
             data[x['number'] + '_zcj'] = x['total']
             data[x['number'] + '_wtgyydm'] = x['failRes']
         self.urp.open(self.urls['getStudents'])
